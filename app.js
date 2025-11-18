@@ -13,6 +13,9 @@ connectDB(ENV.MONGO_URI, ENV.DB_NAME)
 
 // MIDDLEWARES
 
+app.use(express.json());
+
+
 // PREFIX
 app.use('/api/article', articleRouter);
 app.use('/api/user', userRouter);

@@ -84,15 +84,15 @@ const descArticle = async (req , res) => {
 
 const sortByNote = async (req, res) => {
     try {
-       const articles = await ModelArticle.aggregate([
+        const articles = await ModelArticle.aggregate([
         {
            // opérateur d'aggregation pour faire une jointure avec un model 
-           $lookup: {
+        $lookup: {
             from: 'avis', // Modele avec laquelle nous voulons faire la jointure
             localField: "_id", // Champ du modele 'Article' utilise pour la jointure  
             foreignField: 'article', // champ du modele 'avis ' utilisé pour la jointure, 
             as: "avis" // Nom du nouveau champ qui contiendra les documents joints  
-           },
+            },
         },
         {
             $addFields: {
@@ -103,10 +103,10 @@ const sortByNote = async (req, res) => {
         {
             $sort: { averageRating: -1 }, // trie les articles en fonction de leur note moyenne en ordre DESC
         }
-       ]);  
+        ]);  
 
 
-       if(!articles || articles.length === 0) return res.status(404).json('Article not found !!!! ')
+        if(!articles || articles.length === 0) return res.status(404).json('Article not found !!!! ')
         
         res.status(200).json(articles);
     } catch (error) {
