@@ -1,4 +1,5 @@
 const { json } = require('express');
+const createError = require('../middlewares/error');
 const ModelArticle = require('../models/Article.model');
 
 const getAll = async (req, res) => {
@@ -6,7 +7,7 @@ const getAll = async (req, res) => {
         const articles = await ModelArticle.find()
         res.status(200).json(articles);   
     } catch (error) {
-        res.status(500).json(error.message)
+        next(createError(500, "failed get all article", error.message))
     }
 }
 const postArticle =  async (req, res) => {
@@ -14,7 +15,7 @@ const postArticle =  async (req, res) => {
         const article = await ModelArticle.create(req.body);
         res.status(201).json(article); 
     } catch (error) {
-        res.status(500).json(error.message)
+        next(createError(500, "failed get all article", error.message))
     }
 }
 
@@ -24,7 +25,7 @@ const getArticleById = async (req, res) => {
         if(!article) return res.status(404).json('Article not found !')
         res.status(200).json(article)
     } catch (error) {
-        res.status(500).json(error.message)
+        next(createError(500, "failed get all article", error.message))
     }
 }
 
@@ -36,7 +37,7 @@ const deleteArticle = async (req, res) => {
         
         res.status(200).json('Article deleted !!!!!!')
     } catch (error) {
-        res.status(500).json(error.message)        
+        next(createError(500, "failed get all article", error.message))        
     }
 }
 
@@ -49,7 +50,7 @@ const updateArticle = async (req, res) => {
         if(!article) return res.status(404).json('Article not found  !!!');
         res.status(200).json(article)
     } catch (error) {
-        res.status(500).json(error.message)
+        next(createError(500, "failed get all article", error.message))
     }
 }
 
@@ -59,7 +60,7 @@ const getAvis = async (req, res) => {
         if(!articleWithAvis) return res.status(404).json('Avis Not Found !!!!!!!!!');
         res.status(200).json(articleWithAvis)
     } catch (error) {
-        res.status(500).json(error.message)
+        next(createError(500, "failed get all article", error.message))
     }
 } 
 
@@ -68,7 +69,7 @@ const ascArticle = async (req , res) => {
         const articles = await ModelArticle.find().sort("price");
         res.status(200).json(articles);
     } catch (error) {
-        res.status(500).json(error.message)
+        next(createError(500, "failed get all article", error.message))
     }
 }
 
@@ -77,7 +78,7 @@ const descArticle = async (req , res) => {
         const articles = await ModelArticle.find().sort("-price");
         res.status(200).json(articles);
     } catch (error) {
-        res.status(500).json(error.message)
+        next(createError(500, "failed get all article", error.message))
     }
 }
 
@@ -110,10 +111,14 @@ const sortByNote = async (req, res) => {
         
         res.status(200).json(articles);
     } catch (error) {
-        res.status(500).json(error.message)
+        next(createError(500, "failed get all article", error.message))
     }
 } 
 
 module.exports = {
-    getAll
+    getAll,
+    postArticle,
+    getArticleById,
+    deleteArticle,
+    updateArticle
 }

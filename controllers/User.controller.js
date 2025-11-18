@@ -59,8 +59,18 @@ const login = async (req, res) => {
         const token = jwt.sign(
             {id: user._id },
             ENV.TOKEN,
-            {expireIn: "24h"}
+            {expiresIn: "24h"}
         )
+
+        const { password, ...others} = user._doc;
+
+        res.cookie(
+            'acces_token',
+            token,
+            {httpOnly: true}
+        );
+
+        res.status(200).json({message: 'Login successful', user: others});
 
         console.log(token)
 
