@@ -18,14 +18,9 @@ const verifyToken = (req, res, next) =>{
         if(err) return next(createError(403, "Token non valide"));
 
         /* 
-        commentaire sur plusieur ligne :shift+alt+a
-         */
-
-        /* 
         si la vérification réussit, on ajoute les informations
         de l'utilisateur dans l'objet "req.auth"
         */
-
         req.auth = user
 
         next()

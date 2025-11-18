@@ -2,7 +2,7 @@ const { json } = require('express');
 const createError = require('../middlewares/error');
 const ModelArticle = require('../models/Article.model');
 
-const getAll = async (req, res) => {
+const getAll = async (req, res, next) => {
     try {
         const articles = await ModelArticle.find()
         res.status(200).json(articles);   
@@ -10,8 +10,10 @@ const getAll = async (req, res) => {
         next(createError(500, "failed get all article", error.message))
     }
 }
-const postArticle =  async (req, res) => {
+const postArticle =  async (req, res, next) => {
     try {
+        console.log(req.auth.id);
+
         const article = await ModelArticle.create(req.body);
         res.status(201).json(article); 
     } catch (error) {
@@ -19,7 +21,7 @@ const postArticle =  async (req, res) => {
     }
 }
 
-const getArticleById = async (req, res) => {
+const getArticleById = async (req, res, next) => {
     try {
         const article = await ModelArticle.findById(req.params.id);
         if(!article) return res.status(404).json('Article not found !')
@@ -29,7 +31,7 @@ const getArticleById = async (req, res) => {
     }
 }
 
-const deleteArticle = async (req, res) => {
+const deleteArticle = async (req, res, next) => {
     try {
         const article = await ModelArticle.findByIdAndDelete(req.params.id)
         
@@ -41,7 +43,7 @@ const deleteArticle = async (req, res) => {
     }
 }
 
-const updateArticle = async (req, res) => {
+const updateArticle = async (req, res, next) => {
     try {
         const article = await ModelArticle.findByIdAndUpdate(req.params.id, 
             req.body, 
@@ -54,7 +56,7 @@ const updateArticle = async (req, res) => {
     }
 }
 
-const getAvis = async (req, res) => {
+const getAvis = async (req, res, next) => {
     try {
         const articleWithAvis = await ModelArticle.findById(req.params.id).populate("avis");
         if(!articleWithAvis) return res.status(404).json('Avis Not Found !!!!!!!!!');
@@ -64,7 +66,7 @@ const getAvis = async (req, res) => {
     }
 } 
 
-const ascArticle = async (req , res) => {
+const ascArticle = async (req , res, next) => {
     try {
         const articles = await ModelArticle.find().sort("price");
         res.status(200).json(articles);
@@ -73,7 +75,7 @@ const ascArticle = async (req , res) => {
     }
 }
 
-const descArticle = async (req , res) => {
+const descArticle = async (req , res, next) => {
     try {
         const articles = await ModelArticle.find().sort("-price");
         res.status(200).json(articles);
@@ -83,7 +85,7 @@ const descArticle = async (req , res) => {
 }
 
 
-const sortByNote = async (req, res) => {
+const sortByNote = async (req, res, next) => {
     try {
         const articles = await ModelArticle.aggregate([
         {
