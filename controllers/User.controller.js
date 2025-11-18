@@ -1,6 +1,9 @@
 
 const ModelUser = require('../models/User.model.js');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const ENV = require('../config/env.js');
+
 
 // Ajout un nouvel utilisateur
 
@@ -48,9 +51,19 @@ const login = async (req, res) => {
 
         if (!isPasswordValid){
             return res.status(401).json('Invalid password or email !');
-        } else{
-            res.status(200).json('Login successful !');
         }
+        //else{
+        //     res.status(200).json({user, message :'Login successful !'});
+        // }
+
+        const token = jwt.sign(
+            {id: user._id },
+            ENV.TOKEN,
+            {expireIn: "24h"}
+        )
+
+        console.log(token)
+
 
     } catch (error) {
         
