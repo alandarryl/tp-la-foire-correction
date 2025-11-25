@@ -1,7 +1,9 @@
 const { model } = require('mongoose');
 const modelArticle = require('../models/article.model');
 const modelAvis = require('../models/avis.model');
-const createError = require('../middleware/error.js');
+const createError = require('../middlewares/error.js');
+const ModelUser = require("../models/User.model.js");
+const {checkIsAdmin} = require("../services/userService");
 
 const getAll = async (req, res, next) => {
     try {
@@ -13,7 +15,11 @@ const getAll = async (req, res, next) => {
 }
 const postArticle =  async (req, res, next) => {
     try {
-        console.log(req.auth.id);
+        // console.log(req.auth.id);
+
+        await checkIsAdmin(req.auth.id);
+
+
 
         const article = await ModelArticle.create(req.body);
 
@@ -24,12 +30,15 @@ const postArticle =  async (req, res, next) => {
 
         res.status(201).json(article); 
     } catch (error) {
-        next(createError(500, "failed get all article", error.message))
+        next(createError(error.status || 500, error.message))
     }
 }
 
 const getArticleById = async (req, res, next) => {
     try {
+
+        
+
         const article = await ModelArticle.findById(req.params.id);
         if(!article) return res.status(404).json('Article not found !')
         res.status(200).json(article)
@@ -41,6 +50,8 @@ const getArticleById = async (req, res, next) => {
 const deleteArticle = async (req, res, next) => {
     try {
         const article = await ModelArticle.findByIdAndDelete(req.params.id)
+
+        await checkIsAdmin(req.auth.id);
         
         if (!article) return res.status(404).json('Article Not found !!!!')
         
@@ -52,6 +63,9 @@ const deleteArticle = async (req, res, next) => {
 
 const updateArticle = async (req, res, next) => {
     try {
+
+        await checkIsAdmin(req.auth.id);
+
         const article = await ModelArticle.findByIdAndUpdate(req.params.id, 
             req.body, 
             { new: true }
