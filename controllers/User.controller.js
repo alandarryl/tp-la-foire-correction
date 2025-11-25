@@ -65,7 +65,7 @@ const login = async (req, res) => {
         const { password, ...others} = user._doc;
 
         res.cookie(
-            'acces_token',
+            'access_token',
             token,
             {httpOnly: true}
         );

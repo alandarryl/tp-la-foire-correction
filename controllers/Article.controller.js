@@ -1,6 +1,7 @@
-const { json } = require('express');
-const createError = require('../middlewares/error');
-const ModelArticle = require('../models/Article.model');
+const { model } = require('mongoose');
+const modelArticle = require('../models/article.model');
+const modelAvis = require('../models/avis.model');
+const createError = require('../middleware/error.js');
 
 const getAll = async (req, res, next) => {
     try {
@@ -15,6 +16,12 @@ const postArticle =  async (req, res, next) => {
         console.log(req.auth.id);
 
         const article = await ModelArticle.create(req.body);
+
+        // const newArticle = await ModelArticle.create({
+        //         ...req.body,
+        //         user: req.auth.id
+        //     });
+
         res.status(201).json(article); 
     } catch (error) {
         next(createError(500, "failed get all article", error.message))
